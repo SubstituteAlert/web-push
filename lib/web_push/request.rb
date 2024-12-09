@@ -55,7 +55,10 @@ module WebPush
 
     def build_vapid_header
       vapid_key = vapid_pem ? VapidKey.from_pem(vapid_pem) : VapidKey.from_keys(vapid_public_key, vapid_private_key)
-      jwt = JWT.encode(jwt_payload, vapid_key.curve, 'ES256', jwt_header_fields)
+      @my_jwt_payload = jwt_payload
+      @my_jwt_header_fields = jwt_header_fields
+      jwt = JWT.encode(@my_jwt_payload, vapid_key.curve, 'ES256', @my_jwt_header_fields)
+      @my_jwt = jwt
       p256ecdsa = vapid_key.public_key_for_push_header
       "vapid t=#{jwt},k=#{p256ecdsa}"
     end
