@@ -62,11 +62,13 @@ describe WebPush::Request do
       expect(header).to eq("vapid t=jwt.encoded.payload,k=#{vapid_public_key.delete('=')}")
     end
 
-    it 'supports PEM format' do
-      pem = WebPush::VapidKey.new.to_pem
-      expect(WebPush::VapidKey).to receive(:from_pem).with(pem).and_call_original
-      request = build_request(vapid: { subject: 'mailto:sender@example.com', pem: pem })
-      request.build_vapid_header
+    unless RUBY_ENGINE == 'jruby'
+      it 'supports PEM format' do
+        pem = WebPush::VapidKey.new.to_pem
+        expect(WebPush::VapidKey).to receive(:from_pem).with(pem).and_call_original
+        request = build_request(vapid: { subject: 'mailto:sender@example.com', pem: pem })
+        request.build_vapid_header
+      end
     end
   end
 

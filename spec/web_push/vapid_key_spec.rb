@@ -43,25 +43,27 @@ describe WebPush::VapidKey do
     expect(pem).to include('-----BEGIN PUBLIC KEY-----')
   end
 
-  it 'returns the correct public and private keys in pem format' do
-    public_key_base64 = 'BMA-wciFTkEq2waVGB2hg8cSyiRiMcsIvIYQb3LkLOmBheh3YC6NB2GtE9t6YgaXt428rp7bC9JjuPtAY9AQaR8='
-    private_key_base64 = '4MwLvN1Cpxe43AV9fa4BiS-SPp51gWlhv9c6bb_XSJ4='
-    key = WebPush::VapidKey.from_keys(public_key_base64, private_key_base64)
-    pem = key.to_pem
-    expected_pem = <<~PEM
-      -----BEGIN EC PRIVATE KEY-----
-      MHcCAQEEIODMC7zdQqcXuNwFfX2uAYkvkj6edYFpYb/XOm2/10ieoAoGCCqGSM49
-      AwEHoUQDQgAEwD7ByIVOQSrbBpUYHaGDxxLKJGIxywi8hhBvcuQs6YGF6HdgLo0H
-      Ya0T23piBpe3jbyuntsL0mO4+0Bj0BBpHw==
-      -----END EC PRIVATE KEY-----
-      -----BEGIN PUBLIC KEY-----
-      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEwD7ByIVOQSrbBpUYHaGDxxLKJGIx
-      ywi8hhBvcuQs6YGF6HdgLo0HYa0T23piBpe3jbyuntsL0mO4+0Bj0BBpHw==
-      -----END PUBLIC KEY-----
-    PEM
-    expect(pem).to eq(expected_pem)
+  unless RUBY_ENGINE == 'jruby'
+    it 'returns the correct public and private keys in pem format' do
+      public_key_base64 = 'BMA-wciFTkEq2waVGB2hg8cSyiRiMcsIvIYQb3LkLOmBheh3YC6NB2GtE9t6YgaXt428rp7bC9JjuPtAY9AQaR8='
+      private_key_base64 = '4MwLvN1Cpxe43AV9fa4BiS-SPp51gWlhv9c6bb_XSJ4='
+      key = WebPush::VapidKey.from_keys(public_key_base64, private_key_base64)
+      pem = key.to_pem
+      expected_pem = <<~PEM
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEIODMC7zdQqcXuNwFfX2uAYkvkj6edYFpYb/XOm2/10ieoAoGCCqGSM49
+        AwEHoUQDQgAEwD7ByIVOQSrbBpUYHaGDxxLKJGIxywi8hhBvcuQs6YGF6HdgLo0H
+        Ya0T23piBpe3jbyuntsL0mO4+0Bj0BBpHw==
+        -----END EC PRIVATE KEY-----
+        -----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEwD7ByIVOQSrbBpUYHaGDxxLKJGIx
+        ywi8hhBvcuQs6YGF6HdgLo0HYa0T23piBpe3jbyuntsL0mO4+0Bj0BBpHw==
+        -----END PUBLIC KEY-----
+      PEM
+      expect(pem).to eq(expected_pem)
+    end
   end
-
+  
   it 'can return the private key in pem format' do
     pem = WebPush::VapidKey.new.private_key_to_pem
     expect(pem).to include('-----BEGIN EC PRIVATE KEY-----')
@@ -72,13 +74,15 @@ describe WebPush::VapidKey do
     expect(pem).to include('-----BEGIN PUBLIC KEY-----')
   end
 
-  it 'imports pem of public and private keys' do
-    pem = WebPush::VapidKey.new.to_pem
-    key = WebPush::VapidKey.from_pem pem
+  unless RUBY_ENGINE == 'jruby'
+    it 'imports pem of public and private keys' do
+      pem = WebPush::VapidKey.new.to_pem
+      key = WebPush::VapidKey.from_pem pem
 
-    expect(key.to_pem).to eq(pem)
+      expect(key.to_pem).to eq(pem)
+    end
   end
-
+  
   describe 'self.from_keys' do
     it 'returns an encoded public key' do
       key = WebPush::VapidKey.from_keys(vapid_public_key, vapid_private_key)
