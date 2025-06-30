@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 3.0'
 
   spec.add_dependency 'hkdf', '~> 1.0'
-  spec.add_dependency 'jwt', '~> 2.0'
+  spec.add_dependency 'jwt', '>= 2.0', '< 4.0'
   spec.add_dependency 'openssl', '~> 3.0'
 
   spec.add_development_dependency 'rspec', '~> 3.0'

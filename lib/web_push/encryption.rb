@@ -8,6 +8,7 @@ module WebPush
       assert_arguments(message, p256dh, auth)
 
       group_name = 'prime256v1'
+      hash = 'SHA256'
       salt = Random.new.bytes(16)
 
       server = OpenSSL::PKey::EC.generate(group_name)
